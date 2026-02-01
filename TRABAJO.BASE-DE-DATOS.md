@@ -39,6 +39,8 @@ Redis Stack: Un conjunto de extensiones que añaden capacidades de búsqueda ava
 
 # 2. Justificación de uso y casos ideales:
 
+---
+
 ## 2.1 Tipo de aplicaciones donde se utiliza:
 
 -Redis es habitual en aplicaciones que requieren:
@@ -94,6 +96,7 @@ Además Redis es single-threaded por instancia para el procesamiento de comandos
 ---
 
 # 3. Ventajas y desventajas
+---
 
 ## 3.1. Ventajas:
 
@@ -114,6 +117,8 @@ Además Redis es single-threaded por instancia para el procesamiento de comandos
 ---
 
 # 4. Supuesto Práctico:
+
+---
 
 **Sistema de Telemetría y "Live Bidding" para una Plataforma de E-Sports:**
 
@@ -146,8 +151,10 @@ Subastas de "Drops" en tiempo real: Durante las finales, se liberan objetos digi
 -Manejo de picos de tráfico (Escalabilidad): Durante el clímax de una partida, el tráfico puede triplicarse en segundos. Con Redis Cluster, la plataforma puede distribuir la carga entre varios nodos sin interrumpir el servicio, asegurando que ningún usuario experimente retrasos en sus pujas o en la visualización de los puntos.
 
 ---
+
 #5. Análisis de requisitos:
 
+---
 ## - Funcionales:
   
 -Guardar y buscar datos rápido (tipo "clave-valor"; strings, hashes, listas...).
@@ -169,6 +176,8 @@ Subastas de "Drops" en tiempo real: Durante las finales, se liberan objetos digi
 ---
 
 # 6. Diseño del modelo de datos:
+
+---
 
 Redis no utiliza tablas ni esquemas fijos, ya que es una base de datos clave-valor en memoria que permite estructurar los datos mediante tipos nativos de estructuras (strings, hashes, listas, conjuntos, etc.).
  En lugar de diseñar tablas, el diseño se basa en la convención de nombres de claves (namespaces) y en la estructura de los valores.
@@ -359,6 +368,8 @@ Este modelo es flexible y extensible, pudiendo añadirse más claves (por ejempl
 ---
 
 # 7. Implementación
+
+---
 
 ## Supuesto práctico (resumen breve para contextualizar la implementación)
 **Aplicación:** juego multijugador online con:
