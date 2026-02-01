@@ -34,6 +34,7 @@ Redis CLI: Interfaz de línea de comandos estándar.
 Redis Insight: La herramienta gráfica (GUI) oficial para visualizar y gestionar datos de manera intuitiva. Puedes descargarla en el sitio oficial de Redis Insight.
 Bibliotecas (Clients): Posee conectores oficiales para casi todos los lenguajes modernos (Python, Node.js, Java, Go, C#).
 Redis Stack: Un conjunto de extensiones que añaden capacidades de búsqueda avanzada y consulta tipo JSON.
+
 ---
 
 # 2. Justificación de uso y casos ideales:
@@ -75,16 +76,18 @@ Además Redis es single-threaded por instancia para el procesamiento de comandos
 
 ## 2.5 Comparación conceptual con otras bases de datos:
 
-**¿Por qué usar Redis y no MySQL/PostgreSQL?**
+**¿Por qué usar Redis y no MySQL/PostgreSQL?**:
+
 -Velocidad: Redis trabaja en memoria y es muchísimo más rápido para lecturas/escrituras simples y operaciones atómicas (contadores, colas, sets).
 -Estructuras de datos avanzadas: operaciones nativas en sorted sets, bitmaps, hyperloglog, etc., que serían costosas en SQL.
 -Simplicidad para casos transitorios: TTL nativo, ideal para caché y sesiones.
 
-**¿Qué pasaría si se usara una base de datos inadecuada?**
+**¿Qué pasaría si se usara una base de datos inadecuada?**:
 
 -Usar MySQL para una leaderboard muy activa provoca latencia (consultas con ORDER BY y actualizaciones frecuentes) y bloqueos.
 -Usar una base relacional como caché incrementa coste (I/O disco), reduce throughput, y complica la expiración automática.
 -Usar solo Redis para datos transaccionales críticos sin replicación/persistencia configurada puede llevar a pérdida de datos ante caídas si no se toman medidas.
+
 ---
 
 # 3. Ventajas y desventajas
