@@ -152,7 +152,7 @@ Subastas de "Drops" en tiempo real: Durante las finales, se liberan objetos digi
 
 ---
 
-#5. Análisis de requisitos:
+# 5. Análisis de requisitos:
 
 ---
 ## - Funcionales:
