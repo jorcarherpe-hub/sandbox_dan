@@ -41,7 +41,8 @@ Redis Stack: Un conjunto de extensiones que añaden capacidades de búsqueda ava
 
 ## 2.1 Tipo de aplicaciones donde se utiliza:
 
-Redis es habitual en aplicaciones que requieren:
+-Redis es habitual en aplicaciones que requieren:
+
 -Caché de alto rendimiento (respuesta < ms): páginas web, microservicios, API gateways.
 -Sesiones y tokens (session store): almacenamiento de sesiones con TTL.
 -Colas y sistemas de mensajería ligeros: usando listas (LPUSH/BRPOP) o streams (XADD, XREAD).
@@ -52,7 +53,8 @@ Redis es habitual en aplicaciones que requieren:
 
 ## 2.2 Tipo de datos que gestiona mejor:
 
-Redis no es solo clave-valor simple. Gestiona eficientemente:
+-Redis no es solo clave-valor simple. Gestiona eficientemente:
+
 -Strings (JSON serializado, tokens, contadores).
 -Hashes (objetos: usuario:{id} -> campos).
 -Lists (colas FIFO/LIFO).
@@ -65,6 +67,7 @@ Redis no es solo clave-valor simple. Gestiona eficientemente:
 
 Redis mantiene datos en memoria (RAM). Por tanto el volumen práctico depende de la cantidad de RAM disponible y del tamaño por clave.
 Casos típicos:
+
 -Caché de resultados: decenas de GB en clusters para sitios de alto tráfico.
 -Leaderboards: cientos de miles a millones de items en sorted set, siempre que haya RAM suficiente.
 -Para volúmenes de datos muy grandes (terabytes) se emplea Redis Cluster y/o se almacena en otras DB (persistencia en disco no sustituye la necesidad de RAM).
@@ -107,6 +110,7 @@ Además Redis es single-threaded por instancia para el procesamiento de comandos
 -Curva de aprendizaje: Para sacarle el todo el potencial, toca entender sus estructuras de datos y comandos.
 -Problemas de mantenimiento/despliegue: Si se apaga el servidor y no lo configuras bien, se pueden perder cosas.
 -Riesgos de mal uso: Usarlo sin saber = problemas.
+
 ---
 
 # 4. Supuesto Práctico:
@@ -114,27 +118,33 @@ Además Redis es single-threaded por instancia para el procesamiento de comandos
 **Sistema de Telemetría y "Live Bidding" para una Plataforma de E-Sports:**
 
 ### 1. Descripción del escenario:
+
 -Imagina una plataforma global de torneos de E-Sports (como League of Legends o Valorant) llamada "ProStream Arena". La plataforma necesita gestionar dos funciones críticas en tiempo real para millones de usuarios simultáneos:
+
 -Marcadores en vivo (Leaderboards): Ranking global de jugadores que se actualiza cada segundo según las muertes, asistencias y objetivos cumplidos en la partida.
 Subastas de "Drops" en tiempo real: Durante las finales, se liberan objetos digitales limitados (skins, pases) que los espectadores pueden reclamar o subastar en ventanas de tiempo de apenas 30 segundos.
 
 ### 2. Contexto técnico:
+
 -Volumen de datos: 5 millones de usuarios activos concurrentes durante un evento "Major".
 -Carga de trabajo: 500,000 operaciones de escritura por segundo (actualizaciones de estadísticas de juego) y millones de lecturas para mostrar los marcadores en las apps móviles de los fans.
 -Requisito de latencia: Los datos deben reflejarse en la pantalla del usuario en menos de 100 milisegundos desde que ocurre el evento en el servidor de juego.
 
 ### 3. Implementación en Redis:
+
 -Para resolver este caso, utilizaríamos las siguientes estructuras de Redis:
 -Sorted Sets (ZSETs): Para el ranking de jugadores. Redis ordena automáticamente a los jugadores por su puntuación (score) de forma eficiente (𝑂(log𝑁)).
 -Pub/Sub o Streams: Para notificar instantáneamente a todos los clientes cuando se abre una nueva subasta de "Drops".
 -Hashes: Para almacenar los perfiles de sesión de los usuarios (ID, inventario rápido, equipo favorito) con acceso instantáneo.
 -Keys con Expiración (TTL): Para que las ofertas de las subastas desaparezcan automáticamente cuando termine el tiempo de 30 segundos.
 
-### 7. Justificación: ¿Por qué Redis es la base de datos ideal?
+### 7. Justificación: ¿Por qué Redis es la base de datos ideal?:
+
 -Redis es la única opción viable para este supuesto por las siguientes tres razones:
 -Velocidad de procesamiento en RAM: En un entorno de subastas y juegos en vivo, el acceso a disco (propio de bases de datos como MySQL o MongoDB) generaría "lag" o cuellos de botella. Redis, al operar totalmente en memoria, garantiza latencias de microsegundos.
 -Estructuras de datos nativas para rankings: En una base de datos relacional, calcular el "Top 10" de 5 millones de filas constantemente requeriría consultas ORDER BY muy costosas. En Redis, el Sorted Set mantiene la lista ya ordenada en tiempo real; obtener el ranking es una operación casi gratuita para el procesador.
 -Manejo de picos de tráfico (Escalabilidad): Durante el clímax de una partida, el tráfico puede triplicarse en segundos. Con Redis Cluster, la plataforma puede distribuir la carga entre varios nodos sin interrumpir el servicio, asegurando que ningún usuario experimente retrasos en sus pujas o en la visualización de los puntos.
+
 ---
 #5. Análisis de requisitos:
 
@@ -155,6 +165,7 @@ Subastas de "Drops" en tiempo real: Durante las finales, se liberan objetos digi
 -Disponibilidad: Funcionar siempre (con copias de seguridad + failover (Redis Sentinel/Cluster) por si falla algo).
 -Crecimiento: Poder manejar más carga si el sistema crece.
 -Seguridad: Controlar quién accede y cifrar datos si es necesario.
+
 ---
 
 # 6. Diseño del modelo de datos:
@@ -176,8 +187,9 @@ A continuación se presenta el diseño propuesto para el supuesto práctico del 
 
 
 ## 6.2. Convención de nombres (claves):
-En Redis, el diseño de la clave es tan importante como la estructura de datos.
-Se recomienda una convención jerárquica basada en el uso de dos puntos (:) para separar niveles:
+
+-En Redis, el diseño de la clave es tan importante como la estructura de datos.
+-Se recomienda una convención jerárquica basada en el uso de dos puntos (:) para separar niveles:
  
 ~~~
 <recurso>:<id>[:atributo]
