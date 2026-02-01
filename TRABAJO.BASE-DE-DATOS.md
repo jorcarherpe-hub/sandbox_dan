@@ -468,7 +468,7 @@ LPUSH queue:tasks '{"task":"send_email","user":42}'
 
 A continuación se incluyen ejemplos con redis-cli y también con Python (redis-py).
 
-#### 7.3.1 Operaciones con Strings (clave-valor simple)
+### 7.3.1 Operaciones con Strings (clave-valor simple)
 
 **redis-cli:**
 
